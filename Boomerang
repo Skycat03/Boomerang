@@ -1,0 +1,150 @@
+                                                                         // Clearer Variable names
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Boomerang : MonoBehaviour
+{
+    Rigidbody2D rb;
+
+
+    public float Velocity;
+    public float Distance = 4;
+
+    GameObject Player;
+    public Vector2 Location;
+
+    public string TagA;
+    public string TagB;
+    public bool Change = false;
+    
+    void Start()
+    {
+       Player = GameObject.FindGameObjectWithTag("Player");
+        if (Player.GetComponent<Movement>().Spin  == false)
+        {
+            Distance = Distance * -1f;
+        }
+       rb = GetComponent<Rigidbody2D>();
+       Location = new Vector2 (transform.position.x + Distance, transform.position.y) ;
+    }
+
+    private void Update()
+    {
+        if (Location.x == transform.position.x)
+        {
+            Change = true;
+        }
+        
+        switch (Change)
+        {
+            case false:
+                moveAway();
+                break;
+            case true:
+                moveTo();
+                break;
+        }
+    }
+    void moveAway()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, Location , Velocidad * Time.deltaTime);
+        Velocity = Mathf.Clamp(Velocidad-0.2f, 10, 100);
+    }
+    void moveTo()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, Player.transform.position, + Velocidad * Time.deltaTime);
+        Velocity += 0.1f;
+        float Distance = Vector3.Distance(transform.position, Player.transform.position);
+        if (Distance <= 0.1)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D quixoca)
+    {
+        if (quixoca.tag != TagA && quixoca.tag != TagB)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
+
+
+
+_______________________________________________________________________________________________________________________________________________
+                                                                        // Original code
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Boomerang : MonoBehaviour
+{
+    Rigidbody2D rb;
+
+
+    public float Velocidad;
+    public float Distance = 4;
+
+    GameObject Player;
+    public Vector2 Location;
+
+    public string Tagg;
+    public string Taggg;
+    public bool Change = false;
+    
+    void Start()
+    {
+       Player = GameObject.FindGameObjectWithTag("Player");
+        if (Player.GetComponent<HornetMovement>().Giro  == false)
+        {
+            Distance = Distance * -1f;
+        }
+       rb = GetComponent<Rigidbody2D>();
+       Location = new Vector2 (transform.position.x + Distance, transform.position.y) ;
+    }
+
+    private void Update()
+    {
+        if (Location.x == transform.position.x)
+        {
+            Change = true;
+        }
+        
+        switch (Change)
+        {
+            case false:
+                moveAway();
+                break;
+            case true:
+                moveTo();
+                break;
+        }
+    }
+    void moveAway()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, Location , Velocidad * Time.deltaTime);
+        Velocidad = Mathf.Clamp(Velocidad-0.2f, 10, 100);
+    }
+    void moveTo()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, Player.transform.position, + Velocidad * Time.deltaTime);
+        Velocidad += 0.1f;
+        float Distance = Vector3.Distance(transform.position, Player.transform.position);
+        if (Distance <= 0.1)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D quixoca)
+    {
+        if (quixoca.tag != Tagg && quixoca.tag != Taggg)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
