@@ -1,0 +1,109 @@
+                                                          // Original code
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Boss : MonoBehaviour
+{
+    public float Velocidad;
+    public GameObject Player;
+    public Rigidbody2D rb;
+    public Animator animator;
+    Vector2 Destiny;
+    BoxCollider2D AttackTrigger;
+    public float PVA;
+    public float PVMAX;
+    public float TimeCooldown;
+    public float Delay;
+    string Attack;
+    bool Giro = true;
+    public int DamageAmount;
+    public float radi;
+    public Transform AttackLocation;
+
+    private void Start()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        PVMAX = GetComponent<LifeComponent>().PVMAX;
+    }
+    void Update()
+    {
+        PVA = GetComponent<LifeComponent>().PVA;
+        animator.SetFloat("VeloX", rb.velocity.x);
+        if (Giro)
+        {
+            if (Player.transform.position.x < transform.position.x)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            if (Player.transform.position.x > transform.position.x)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            moveTo();
+        }
+        transform.position = new Vector2 (Mathf.Clamp(transform.position.x,-15.8876f , 10.51814f) , transform.position.y);
+
+    }
+    void moveTo()
+    {
+        Destiny = new Vector2(Player.transform.position.x, transform.position.y);
+        transform.position = Vector2.MoveTowards(transform.position, Destiny, + Velocidad * Time.deltaTime);
+    }
+
+    private void OnTriggerStay2D(Collider2D quixoca)
+    {
+        if (quixoca.tag == "Player" && TimeCooldown <= Time.time)
+        {
+            BossAttack();
+            TimeCooldown = Time.time + Delay;
+        }
+    }
+    public void BossAttack()
+    {
+        if (PVA>= PVMAX/2)
+        {
+            Attack = "1";
+        }
+        else { Attack = "2"; }
+        switch (Attack)
+        {
+            case "1":
+                animator.SetTrigger("Attack1");
+                break;
+            case "2":
+                animator.SetTrigger("Attack2");
+                break;
+        }
+    }
+    public void Damage()
+    {
+        Collider2D[] objectesDintre = Physics2D.OverlapCircleAll(AttackLocation.position, radi);
+
+        foreach (Collider2D CurrectCollider in objectesDintre)
+        {
+            LifeComponent LC = CurrectCollider.GetComponent<LifeComponent>();
+            if (LC != null && CurrectCollider.tag == "Player")
+            {
+                LC.Danyo(DamageAmount);
+            }
+
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(AttackLocation.position, radi);
+    }
+    public void StopMovement()
+    {
+        Giro = false;
+
+    }
+    public void Move()
+    {
+        Giro = true;
+    }
+}
