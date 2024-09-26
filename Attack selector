@@ -1,0 +1,81 @@
+                                                      // Original Code
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.VFX;
+
+public class Instanciate_Balas : MonoBehaviour
+{
+    public GameObject Area;
+    public GameObject Boomerang;
+    public GameObject Needle;
+
+    public GameObject Spawn;
+    public GameObject Spawn_Area;
+
+    public string TipoDeBala;
+    public Animator animacion;
+    float Cooldown;
+    public float Haste = 0f;
+    float TimeToAttack;
+
+    private void Start()
+    {
+        animacion = GetComponent<Animator>();
+    }
+    private void Update()
+    {
+        
+        if (Time.time > TimeToAttack)
+        {
+        }
+        else
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+	    {
+            AudioManager.FXExecute(AudioManager.SFX.Hedore);
+            animacion.SetTrigger("Ataque");
+            TipoDeBala = "Area";
+	    }
+        if (Input.GetKeyDown(KeyCode.I))
+	    {
+            AudioManager.FXExecute(AudioManager.SFX.Garama);
+            animacion.SetTrigger("Ataque");
+            TipoDeBala = "Boomerang";
+	    }
+        if (Input.GetKeyDown(KeyCode.N))
+	    {
+            AudioManager.FXExecute(AudioManager.SFX.Throw);
+            animacion.SetTrigger("Ataque");
+            TipoDeBala = "Needle";
+	    }
+    }
+    
+    public void attacklaunch()
+    {
+        
+        switch (TipoDeBala)
+        {
+
+            case "Area":
+                Instantiate(Area, Spawn_Area.transform.position, Spawn_Area.transform.rotation);
+                TipoDeBala = null;
+                Cooldown = 2 - Haste;
+                break;
+            case "Boomerang":
+                Instantiate(Boomerang, Spawn.transform.position, Spawn.transform.rotation);
+                TipoDeBala = null;
+                Cooldown =0.5f - Haste;
+                break;
+            case "Needle":
+                Cooldown = 0.3f - Haste;
+                Instantiate(Needle, Spawn.transform.position, Spawn.transform.rotation);
+                TipoDeBala = null;
+                break;
+        }
+        TimeToAttack = Cooldown + Time.time;
+    }
+}
