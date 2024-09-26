@@ -1,4 +1,4 @@
-                                                                                        //Original Code
+                                                                                        //Original Code (Player)
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,3 +51,47 @@ public class Buff : MonoBehaviour
         }
     }
 }
+
+
+                                                                        // Originak Code (Item)
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using Random = UnityEngine.Random;
+
+public class RandomBuff : MonoBehaviour
+{
+    int Buffnumber;
+    Buff Buffer;
+    public Light2D Lights;
+
+    private void Start()
+    {
+        Buffer = GameObject.FindGameObjectWithTag("Player").GetComponent<Buff>();
+        Buffnumber = Random.Range(1, 4);
+        switch (Buffnumber)
+        {
+            case 1:
+                Lights.color = Color.blue;
+                break;
+            case 2:
+                Lights.color = Color.red;
+                break;
+            case 3:
+                Lights.color = Color.yellow;
+                break;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D quixoca)
+    {
+        if (quixoca.tag != "Player"){ return; }
+        else 
+        {
+		Buffer.Type = Buffnumber;
+        Destroy(gameObject);
+		}
+	}
+}
+
