@@ -1,0 +1,53 @@
+                                                                                        //Original Code
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Buff : MonoBehaviour
+{
+    public float hastetime;
+    HornetMovement PlayerMove;
+    Instanciate_Balas Haste;
+    public int Type = 0;
+    bool ST = false;
+    float TimerTime;
+    public float x;
+
+    void Start()
+    {
+        PlayerMove = GetComponent<HornetMovement>();
+        Haste = GetComponent<Instanciate_Balas>();
+    }
+
+    void Update()
+    {
+        if (Type != 0)
+        {
+            AudioManager.FXExecute(AudioManager.SFX.Garama);
+        }
+        //Dar Buff
+        switch (Type)
+        {
+            case 0: break;
+            case 1: //SlowTime_Blue
+                Time.timeScale = 0.6f;
+                ST = true;
+                TimerTime = Time.time+x;
+                Type = 0;
+                break;
+            case 2: //Haste_Red
+                Haste.Haste = Haste.Haste + hastetime;
+                Type = 0;
+                break;
+            case 3: //Velocity_Yellow
+                PlayerMove.Velocity++;
+                Type = 0;
+                break;
+        }
+        if (TimerTime <= Time.time && ST)
+        {
+            Time.timeScale = 1;
+            ST = false;
+        }
+    }
+}
