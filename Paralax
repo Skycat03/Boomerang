@@ -1,0 +1,33 @@
+                                                                              // Original Code
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class BKGMov : MonoBehaviour
+{
+    public float Mult;
+    [SerializeField]float Pos;
+    [SerializeField] float NewPos;
+
+    Rigidbody2D rbP;
+    void Start()
+    {
+        rbP = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        Pos = rbP.position.x;
+
+    }
+
+    void Update()
+    {
+        //float Vel = rbP.velocity.x;
+        NewPos = rbP.position.x;
+
+        if (Pos != NewPos)
+        {
+           transform.position += new Vector3((Pos - NewPos) *Mult, 0,0);
+        }
+       
+        Pos = NewPos;
+    }
+}
